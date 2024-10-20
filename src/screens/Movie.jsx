@@ -15,6 +15,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Cast from '../components/Cast';
 import MovieList from '../components/MovieList';
+import {getMovieCastApiCall, getMovieDetailsApiCall, getSimilarMoviesApiCall} from '../apis/movie.api';
+import Loading from '../components/Loading';
 
 const {width, height} = Dimensions.get('window');
 
@@ -22,14 +24,36 @@ export default function Movie() {
   const navigation = useNavigation();
   const route = useRoute();
   const [isFavourite, setIsFavourite] = useState(false);
-  const [cast, setCast] = useState([1, 2, 3, 4]);
+  const [cast, setCast] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
+  const [movieDetails, setMovieDetails] = useState(null);
   const movieName = 'Harry Potter';
 
-  const movie = route.params;
+  async function getMovieDetails() {
+    const res = await getMovieDetailsApiCall(route.params.id);
+    setMovieDetails(res);
+  }
+  
+  async function getMovieCast() {
+    const res = await getMovieCastApiCall(route.params.id);
+    setCast(res.cast);
+  }
+  
+  async function getSimilarMovies() {
+    const res = await getSimilarMoviesApiCall(route.params.id);
+    console.log(res)
+    setSimilarMovies(res.results);
+  }
+
   useEffect(() => {
-    console.log(movie);
+    getMovieDetails();
+    getMovieCast();
+    getSimilarMovies();
   }, []);
+
+  if (movieDetails === null || cast === null) {
+    return <Loading />;
+  }
 
   return (
     <ScrollView
@@ -51,7 +75,7 @@ export default function Movie() {
         <View>
           <Image
             source={{
-              uri: 'https://irs.www.warnerbros.com/hero-banner-v2-mobile-png/movies/media/browser/HP_8COL_H_DD_4320x1080_300dpi_EN.png',
+              uri: `https://image.tmdb.org/t/p/w500/${movieDetails.backdrop_path}`,
             }}
             style={{width, height: height * 0.55}}
           />
@@ -69,33 +93,36 @@ export default function Movie() {
       <View style={{marginTop: -(height * 0.0)}} className="space-y-3">
         {/* title */}
         <Text className="text-white text-center text-3xl font-bold tracking-wider">
-          {movieName}
+          {movieDetails.original_title}
         </Text>
+        {/* tag line */}
+        <Text className="text-neutral-300 font-semibold text-sm text-center">
+          {movieDetails.tagline}
+        </Text>
+
         {/* status, release, runtime */}
         <Text className="text-neutral-400 font-semibold text-base text-center">
-          Release • 2020 • 170 min
+          Release • {movieDetails.release_date.slice(0, 4)} •{' '}
+          {movieDetails.runtime} min
         </Text>
 
         {/* geners */}
-        <View className="flex-row justify-center mx-4 space-x-2">
-          <Text className="text-neutral-400 font-semibold text-base text-center">
-            Action •
-          </Text>
-          <Text className="text-neutral-400 font-semibold text-base text-center">
-            Thrill •
-          </Text>
-          <Text className="text-neutral-400 font-semibold text-base text-center">
-            Comedy
-          </Text>
-        </View>
+        {movieDetails.genres && (
+          <View className="flex-row justify-center mx-4 space-x-2">
+            {movieDetails.genres.map((genre, index) => (
+              <Text
+                key={genre.id}
+                className="text-neutral-400 font-semibold text-base text-center">
+                {genre.name}{' '}
+                {index !== movieDetails.genres.length - 1 && ' •'}
+              </Text>
+            ))}
+          </View>
+        )}
 
         {/* desription */}
         <Text className="text-neutral-400 mx-4 tracking-wide">
-          Harry Potter is a film series based on the Harry Potter series of
-          novels by J. K. Rowling. The series was produced and distributed by
-          Warner Bros. Pictures and consists of eight fantasy films, beginning
-          with Harry Potter and the Philosopher's Stone (2001) and culminating
-          with Harry Potter and the Deathly Hallows – Part 2 (2011).
+          {movieDetails.overview}
         </Text>
       </View>
 
@@ -103,7 +130,7 @@ export default function Movie() {
       <Cast navigation={navigation} cast={cast} />
 
       {/* similar movies */}
-      <MovieList titl="Similar Movies" data={similarMovies}/>
+      <MovieList title="Similar Movies" data={similarMovies} />
     </ScrollView>
   );
 }

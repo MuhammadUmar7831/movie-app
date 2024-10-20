@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function Cast({navigation, cast}) {
   const charecterName = 'Harry Potter';
   const personName = 'Daniel RedCliffe';
+
+  useEffect(()=>{console.dir("cast", cast)},[])
   return (
     <View className="my-6">
       <Text className="text-white text-lg mx-4 mb-5">Top Cast</Text>
@@ -34,19 +36,19 @@ export default function Cast({navigation, cast}) {
                   <Image
                     className="rounded-2xl h-24 w-20"
                     source={{
-                      uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/DanielRadcliffe.jpg/220px-DanielRadcliffe.jpg',
+                      uri: `https://image.tmdb.org/t/p/w500/${person.profile_path}`
                     }}
                   />
                 </View>
                 <Text className="text-white text-xs mt-1">
-                  {charecterName.length > 10
-                    ? charecterName.slice(0, 10) + '...'
-                    : charecterName}
+                  {person.character.length > 10
+                    ? person.character.slice(0, 10) + '...'
+                    : person.character}
                 </Text>
                 <Text className="text-neutral-400 text-xs mt-1">
-                  {personName.length > 10
-                    ? personName.slice(0, 10) + '...'
-                    : personName}
+                  {person.original_name.length > 10
+                    ? person.original_name.slice(0, 10) + '...'
+                    : person.original_name}
                 </Text>
               </TouchableOpacity>
             );

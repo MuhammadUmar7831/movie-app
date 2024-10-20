@@ -41,3 +41,36 @@ export async function getPopularMoviesApiCall(page = 1) {
     return {results: null};
   }
 }
+
+export async function getMovieDetailsApiCall(movieId) {
+  try {
+    const response = await api.get(`/movie/${movieId}`, {
+      params: {language: 'en-US'},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}
+
+export async function getMovieCastApiCall(movieId) {
+  try {
+    const response = await api.get(`/movie/${movieId}/credits`, {
+      params: {language: 'en-US'},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}
+
+export async function getSimilarMoviesApiCall(movieId, page = 1) {
+  try {
+    const response = await api.get(`/movie/${movieId}/similar`, {
+      params: {language: 'en-US', page},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}

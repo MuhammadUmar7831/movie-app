@@ -16,11 +16,17 @@ export default function MovieList({data, title}) {
   const navigation = useNavigation();
 
   function handleClick(movie) {
-    navigation.navigate('Movie', movie);
+    navigation.navigate({name: 'Movie', params: movie, key: movie.id});
   }
 
   if (data === undefined || data === null) {
-    return <View style={{width, height}} className="bg-neutral-900"></View>;
+    return (
+      <View className="bg-neutral-900">
+        <Text className="text-[#DDA916] mx-4 text-2xl">
+          😔 Error Fetching Data
+        </Text>
+      </View>
+    );
   }
 
   return (

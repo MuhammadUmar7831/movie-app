@@ -96,3 +96,14 @@ export async function getPersonMoviesApiCall(personId) {
     return {results: null};
   }
 }
+
+export async function getMoviesBySearchApiCall(query, page = 1) {
+  try {
+    const response = await api.get(`/search/movie`, {
+      params: {language: 'en-US', query, page},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}

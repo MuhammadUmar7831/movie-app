@@ -8,7 +8,7 @@ export default function Loading() {
   return (
     <View
       style={{height, width}}
-      className="absolute flex-row justify-center items-center">
+      className="absolute flex-row justify-center items-center bg-neutral-900">
       <CircleSnail thickness={12} size={160} color="#DDA916"/>
     </View>
   );

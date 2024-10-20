@@ -33,9 +33,9 @@ export default function MovieList({data, title}) {
     <View className="space-y-3">
       <View className="flex-1 flex-row justify-between items-center px-4">
         <Text className="text-xl text-white font-bold">{title}</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Text className="text-[#DDA916] text-md">See All</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <ScrollView className="space-x-3 px-2" horizontal>
         {data.map((_data, index) => (

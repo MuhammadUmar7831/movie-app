@@ -9,15 +9,30 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {XMarkIcon} from 'react-native-heroicons/outline';
 import {useNavigation} from '@react-navigation/native';
+import {getMoviesBySearchApiCall} from '../apis/movie.api';
 
 const {width, height} = Dimensions.get('window');
 
 export default function Search() {
   const navigation = useNavigation();
+  const [query, setQuery] = useState(null);
   const [result, setResult] = useState(null);
+
+  async function getMoviesBySearch() {
+    console.log(query)
+    if (query !== null) {
+      const res = await getMoviesBySearchApiCall(query);
+      console.log(res);
+      setResult(res.results);
+    }
+  }
+  useEffect(() => {
+    getMoviesBySearch();
+  }, [query]);
+
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
       <View
@@ -29,6 +44,7 @@ export default function Search() {
         <TextInput
           placeholder="Search Movie"
           placeholderTextColor="lightgray"
+          onChangeText={text => setQuery(text)}
           className="pb-1 pl-6 text-base font-semibold text-white tracking-wide"
         />
         <TouchableOpacity
@@ -54,13 +70,15 @@ export default function Search() {
                 onPress={() => navigation.navigate('Movie', item)}>
                 <View className="space-y-2 mb-2">
                   <Image
-                    source={{uri: ''}}
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                    }}
                     style={{width: width * 0.44, height: height * 0.3}}
                   />
                   <Text className="text-neutral-400 ml-1">
-                    {item.movieName > 22
-                      ? item.movieName.slice(0, 22) + '...'
-                      : item.movieName}
+                    {item.title.length > 22
+                      ? item.title.slice(0, 22) + '...'
+                      : item.title}
                   </Text>
                 </View>
               </TouchableWithoutFeedback>

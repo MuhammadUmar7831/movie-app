@@ -18,17 +18,19 @@ import {
   getTopRatedMoviesApiCall,
   getTredingMoviesApiCall,
 } from '../apis/movie.api';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Home() {
   const [topRated, setTopRated] = useState(null);
   const [popular, setPopular] = useState(null);
   const [trending, setTrending] = useState(null);
+  const navigation = useNavigation();
 
   async function getTopRatedMovies() {
     const res = await getTopRatedMoviesApiCall();
     setTopRated(res.results);
   }
-  
+
   async function getPopularMovies() {
     const res = await getPopularMoviesApiCall();
     setPopular(res.results);
@@ -61,7 +63,7 @@ export default function Home() {
           <Text className="text-white text-3xl font-bold">
             <Text className="text-[#DDA916]">M</Text>ovies
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <MagnifyingGlassIcon size={30} strokeWidth={2} color="white" />
           </TouchableOpacity>
         </View>

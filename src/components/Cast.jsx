@@ -25,7 +25,12 @@ export default function Cast({navigation, cast}) {
                 key={index}
                 className="mr-4 items-center"
                 onPress={() => navigation.navigate('Person', person)}>
-                <View className="overflow-hidden rounded-full h-20 w-20 items-center border-2 border-neutral-500">
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'gray',
+                  }}
+                  className="overflow-hidden rounded-full h-20 w-20 items-center">
                   <Image
                     className="rounded-2xl h-24 w-20"
                     source={{

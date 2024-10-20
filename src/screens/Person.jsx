@@ -42,7 +42,9 @@ export default function Person() {
             shadowOpacity: 1,
           }}
           className="flex-row justify-center">
-          <View className="items-center rounded-full overflow-hidden h-72 w-72 border border-neutral-500">
+          <View
+            style={{borderWidth: 1, borderColor: 'gray'}}
+            className="items-center rounded-full overflow-hidden h-72 w-72">
             <Image
               source={{
                 uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/DanielRadcliffe.jpg/220px-DanielRadcliffe.jpg',

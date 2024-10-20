@@ -27,7 +27,6 @@ export default function Movie() {
   const [cast, setCast] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
   const [movieDetails, setMovieDetails] = useState(null);
-  const movieName = 'Harry Potter';
 
   async function getMovieDetails() {
     const res = await getMovieDetailsApiCall(route.params.id);
@@ -41,7 +40,6 @@ export default function Movie() {
   
   async function getSimilarMovies() {
     const res = await getSimilarMoviesApiCall(route.params.id);
-    console.log(res)
     setSimilarMovies(res.results);
   }
 

@@ -6,13 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export default function Cast({navigation, cast}) {
-  const charecterName = 'Harry Potter';
-  const personName = 'Daniel RedCliffe';
 
-  useEffect(()=>{console.dir("cast", cast)},[])
   return (
     <View className="my-6">
       <Text className="text-white text-lg mx-4 mb-5">Top Cast</Text>

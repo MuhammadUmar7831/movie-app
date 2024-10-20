@@ -8,16 +8,43 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ChevronLeftIcon} from 'react-native-heroicons/outline';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import MovieList from '../components/MovieList';
+import {
+  getPersonDetailsApiCall,
+  getPersonMoviesApiCall,
+} from '../apis/movie.api';
+import Loading from '../components/Loading';
 
 const {width, height} = Dimensions.get('window');
 
 export default function Person() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [pesrsonMovies, setPesrsonMovies] = useState(null);
+  const [person, setPerson] = useState(null);
+  const [altImage, setAltImage] = useState(null);
+
+  async function getPersonDetails() {
+    const res = await getPersonDetailsApiCall(route.params.id);
+    setPerson(res);
+  }
+
+  async function getPersonMovies() {
+    const res = await getPersonMoviesApiCall(route.params.id);
+    setPesrsonMovies(res.cast);
+  }
+
+  useEffect(() => {
+    getPersonDetails();
+    getPersonMovies();
+  }, []);
+
+  if (person === null || pesrsonMovies === null) {
+    return <Loading />;
+  }
 
   return (
     <ScrollView
@@ -47,54 +74,64 @@ export default function Person() {
             className="items-center rounded-full overflow-hidden h-72 w-72">
             <Image
               source={{
-                uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/DanielRadcliffe.jpg/220px-DanielRadcliffe.jpg',
+                uri:
+                  altImage !== null
+                    ? altImage
+                    : `https://image.tmdb.org/t/p/w500/${person.profile_path}`,
               }}
+              alt="Image"
               style={{height: height * 0.43, width: width * 0.74}}
+              onError={() =>
+                setAltImage(
+                  'https://png.pngtree.com/png-clipart/20240613/original/pngtree-persona-perfection-fubuki-sprite-in-gray-dress-for-visual-novel-png-image_15317738.png',
+                )
+              }
             />
           </View>
         </View>
         <View className="mt-8">
           <Text className="text-3xl text-white font-bold text-center">
-            Daniel RedCliffe
+            {person.name}
           </Text>
 
           <Text className="text-base text-neutral-500 text-center">
-            London • United Kingdom
+            {person.place_of_birth}
           </Text>
         </View>
 
         <View className="mx-3 mt-6 p-4 flex-row justify-between items-center bg-neutral-700 rounded-full">
           <View className="border-r-2 border-r-neutral-400 items-center px-2">
             <Text className="text-white font-semibold">Gender</Text>
-            <Text className="text-neutral-300 font-semibold">Male</Text>
+            <Text className="text-neutral-300 font-semibold">
+              {person.gender === 1 ? 'Female' : 'Male'}
+            </Text>
           </View>
-          <View className="border-r-2 border-r-neutral-400 items-center px-2">
-            <Text className="text-white font-semibold">Birthday</Text>
-            <Text className="text-neutral-300 font-semibold">1964-09-02</Text>
-          </View>
+          {
+            <View className="border-r-2 border-r-neutral-400 items-center px-2">
+              <Text className="text-white font-semibold">Birthday</Text>
+              <Text className="text-neutral-300 font-semibold">
+                {person.birthday ? person.birthday : 'NAN'}
+              </Text>
+            </View>
+          }
           <View className="border-r-2 border-r-neutral-400 items-center px-2">
             <Text className="text-white font-semibold">Known for</Text>
-            <Text className="text-neutral-300 font-semibold">Acting</Text>
+            <Text className="text-neutral-300 font-semibold">
+              {person.known_for_department}
+            </Text>
           </View>
           <View className="items-center px-2">
             <Text className="text-white font-semibold">Popularilty</Text>
-            <Text className="text-neutral-300 font-semibold">64.23</Text>
+            <Text className="text-neutral-300 font-semibold">
+              {person.popularity}
+            </Text>
           </View>
         </View>
 
         <View className="my-6 mx-4 space-y-2">
           <Text className="text-white text-lg">Biography</Text>
           <Text className="text-neutral-400 tracking-wide">
-            Daniel Jacob Radcliffe (born 23 July 1989)[1] is an English actor.
-            He rose to fame at age 12 when he began portraying Harry Potter in
-            the Harry Potter film series. Radcliffe plays Potter in all eight
-            films in the series, beginning with Harry Potter and the
-            Philosopher's Stone (2001) and concluding with Harry Potter and the
-            Deathly Hallows – Part 2 (2011). Radcliffe branched out to stage
-            acting in 2007, starring in the West End and Broadway productions of
-            Equus. He returned to Broadway in the musical How to Succeed in
-            Business Without Really Trying (2011), earning a Grammy Award
-            nomination.
+            {person.biography}
           </Text>
         </View>
 

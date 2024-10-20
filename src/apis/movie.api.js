@@ -74,3 +74,25 @@ export async function getSimilarMoviesApiCall(movieId, page = 1) {
     return {results: null};
   }
 }
+
+export async function getPersonDetailsApiCall(personId) {
+  try {
+    const response = await api.get(`/person/${personId}`, {
+      params: {language: 'en-US'},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}
+
+export async function getPersonMoviesApiCall(personId) {
+  try {
+    const response = await api.get(`/person/${personId}/movie_credits`, {
+      params: {language: 'en-US'},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}

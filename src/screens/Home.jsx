@@ -14,17 +14,24 @@ import {
 import TrendingMovies from '../components/TrendingMovies';
 import MovieList from '../components/MovieList';
 import {
+  getPopularMoviesApiCall,
   getTopRatedMoviesApiCall,
   getTredingMoviesApiCall,
 } from '../apis/movie.api';
 
 export default function Home() {
   const [topRated, setTopRated] = useState(null);
+  const [popular, setPopular] = useState(null);
   const [trending, setTrending] = useState(null);
 
   async function getTopRatedMovies() {
     const res = await getTopRatedMoviesApiCall();
     setTopRated(res.results);
+  }
+  
+  async function getPopularMovies() {
+    const res = await getPopularMoviesApiCall();
+    setPopular(res.results);
   }
 
   async function getTredingMovies() {
@@ -33,8 +40,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getTopRatedMovies();
     getTredingMovies();
+    getTopRatedMovies();
+    getPopularMovies();
   }, []);
 
   if (trending === null || topRated === null) {
@@ -63,7 +71,7 @@ export default function Home() {
         contentContainerStyle={{paddingBottom: 10}}>
         <TrendingMovies trending={trending} />
         <MovieList data={topRated} title="Upcoming" />
-        {/* <MovieList title="Popular" /> */}
+        <MovieList data={popular} title="Popular" />
       </ScrollView>
     </View>
   );

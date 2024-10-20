@@ -8,10 +8,21 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
 export default function MovieList({data, title}) {
+  const navigation = useNavigation();
+
+  function handleClick(movie) {
+    navigation.navigate('Movie', movie);
+  }
+
+  if (data === undefined || data === null) {
+    return <View style={{width, height}} className="bg-neutral-900"></View>;
+  }
+
   return (
     <View className="space-y-3">
       <View className="flex-1 flex-row justify-between items-center px-4">
@@ -22,17 +33,21 @@ export default function MovieList({data, title}) {
       </View>
       <ScrollView className="space-x-3 px-2" horizontal>
         {data.map((_data, index) => (
-          <View key={index}>
-            <Image
-              style={{width: width * 0.33, height: height * 0.22}}
-              source={{uri: `https://image.tmdb.org/t/p/w500${_data.poster_path}`}}
-            />
-            <Text
-              style={{maxWidth: width * 0.33}}
-              className="text-white mt-2 text-md text-center">
-              {_data.original_title}
-            </Text>
-          </View>
+          <TouchableOpacity key={index} onPress={() => handleClick(_data)}>
+            <View>
+              <Image
+                style={{width: width * 0.33, height: height * 0.22}}
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${_data.poster_path}`,
+                }}
+              />
+              <Text
+                style={{maxWidth: width * 0.33}}
+                className="text-white mt-2 text-md text-center">
+                {_data.original_title}
+              </Text>
+            </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>

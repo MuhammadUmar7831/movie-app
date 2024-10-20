@@ -30,3 +30,14 @@ export async function getTopRatedMoviesApiCall(page = 1) {
     return {results: null};
   }
 }
+
+export async function getPopularMoviesApiCall(page = 1) {
+  try {
+    const response = await api.get(`/movie/popular`, {
+      params: {language: 'en-US', page: page},
+    });
+    return response.data;
+  } catch (error) {
+    return {results: null};
+  }
+}

@@ -8,10 +8,17 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
 export default function TrendingMovies({trending}) {
+  const navigation = useNavigation();
+
+  function handleClick(item) {
+    navigation.navigate('Movie', item);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Trending Movies</Text>
@@ -21,9 +28,16 @@ export default function TrendingMovies({trending}) {
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}>
         {trending.map(movie => (
-          <TouchableWithoutFeedback key={movie.id}>
+          <TouchableWithoutFeedback
+            key={movie.id}
+            onPress={() => handleClick(movie)}>
             <View style={styles.imageContainer}>
-              <Image source={{uri:`https://image.tmdb.org/t/p/w500${movie.poster_path}`}} style={styles.image} />
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                }}
+                style={styles.image}
+              />
             </View>
           </TouchableWithoutFeedback>
         ))}
@@ -47,7 +61,7 @@ const styles = StyleSheet.create({
     height: height * 0.4,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: width * 0.2
+    marginHorizontal: width * 0.2,
   },
   image: {
     width: '100%',
